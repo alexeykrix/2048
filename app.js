@@ -1,8 +1,6 @@
 'use strict'
 
 Array.prototype.last = function () {return this[this.length - 1]}
-
-
 class Game2048 {
   constructor (selector='body', name='game-container') {
     this.selector = selector
@@ -32,7 +30,7 @@ class Game2048 {
     return Math.floor(Math.random() * (max + 1))
   }
 
-  createTile(init) {
+  async createTile(init) {
     if (init) {
       let tile = {
         x: this.getRandomInRange(3),
@@ -98,6 +96,8 @@ class Game2048 {
       return
     }
     this.data.push(tile)
+
+    return await tile
   }
   
   renderTiles() {
@@ -374,11 +374,10 @@ class Game2048 {
     if (this.data.length> newData.length) return true
     return false
   }
-  handlerKeydown = (e) => {
 
+  moveTiles = async (e) => {
     let willRemoved = []
     let newData = []
-    this.await = true
 
     if (e.code === 'KeyA') { // move to left 
       let rows = [[], [], [], []]
@@ -512,57 +511,64 @@ class Game2048 {
       })
     }
 
-    willRemoved.forEach(del => {
-      let tileElement = this.tiles.querySelector(`[data-id="${del.id}"]`)
-      if (!tileElement) return
-      tileElement.style.top = `${del.y * this.tileKoef}px`
-      tileElement.style.left = `${del.x * this.tileKoef}px` 
-      tileElement.classList = 'tile s' + this.cellTypes.indexOf(del.val*2)
-      setTimeout(()=> {
-        tileElement.style.opacity = `0`
-        this.tiles.querySelector(`[data-id="${del.id}"]`).remove()
-      }, 200)
-    })
-
     this.data = [...newData]
-    this.data.length? localStorage.setItem('data2048', JSON.stringify(this.data)):''
+    return await newData, willRemoved 
+  }
 
-    this.data.forEach(tile => {
-      if (this.tiles.querySelector(`[data-id="${tile.id}"]`)) {
-        let tileElement = this.tiles.querySelector(`[data-id="${tile.id}"]`)
-        tileElement.querySelector('.tile-inner').innerHTML = `${tile.val}` 
-        tileElement.style.top = `${tile.y * this.tileKoef}px`
-        tileElement.style.left = `${tile.x * this.tileKoef}px`      
-        tileElement.classList = 'tile s' + this.cellTypes.indexOf(tile.val)
-        if (tile.mergedInLast === true) {
-          tileElement.style.transform = `scale(1.2)`        
-          setTimeout(()=> {
-            tileElement.style.transform = `scale(1)`
-          }, 50)
-          tile.mergedInLast === true
-        }
-      } else {
-        let tileElement = document.createElement('div')
-        tileElement.innerHTML = `<div class="tile-inner">
-          ${tile.val} 
-        </div>` 
-        tileElement.style.top = `${tile.y * this.tileKoef}px`
-        tileElement.style.left = `${tile.x * this.tileKoef}px`      
-        tileElement.classList = 'tile s' + this.cellTypes.indexOf(tile.val)
-        tileElement.dataset.id = tile.id
-        
-        this.tiles.appendChild(tileElement)
-        tileElement.style.transform = `scale(0.3)`
-        
+  handlerKeydown = (e) => {
+    let willRemoved = []
+    this.moveTiles(e).then(r => {
+      
+      willRemoved = [...r]
+    
+      willRemoved.forEach(del => {
+        let tileElement = this.tiles.querySelector(`[data-id="${del.id}"]`)
+        if (!tileElement) return
+        tileElement.style.top = `${del.y * this.tileKoef}px`
+        tileElement.style.left = `${del.x * this.tileKoef}px` 
+        tileElement.classList = 'tile s' + this.cellTypes.indexOf(del.val*2)
         setTimeout(()=> {
-          tileElement.style.transform = `scale(1)`
-        }, 50)
-      }
+          tileElement.style.opacity = `0`
+          this.tiles.querySelector(`[data-id="${del.id}"]`).remove()
+        }, 200)
+      })
+      this.data.length? localStorage.setItem('data2048', JSON.stringify(this.data)):''
+
+      this.createTile().then(rep => {
+        this.data.forEach(tile => {
+          if (this.tiles.querySelector(`[data-id="${tile.id}"]`)) {
+            let tileElement = this.tiles.querySelector(`[data-id="${tile.id}"]`)
+            tileElement.querySelector('.tile-inner').innerHTML = `${tile.val}` 
+            tileElement.style.top = `${tile.y * this.tileKoef}px`
+            tileElement.style.left = `${tile.x * this.tileKoef}px`      
+            tileElement.classList = 'tile s' + this.cellTypes.indexOf(tile.val)
+            if (tile.mergedInLast === true) {
+              tileElement.style.transform = `scale(1.2)`        
+              setTimeout(()=> {
+                tileElement.style.transform = `scale(1)`
+              }, 50)
+              tile.mergedInLast === true
+            }
+          } else {
+            let tileElement = document.createElement('div')
+            tileElement.innerHTML = `<div class="tile-inner">
+              ${tile.val} 
+            </div>` 
+            tileElement.style.top = `${tile.y * this.tileKoef}px`
+            tileElement.style.left = `${tile.x * this.tileKoef}px`      
+            tileElement.classList = 'tile s' + this.cellTypes.indexOf(tile.val)
+            tileElement.dataset.id = tile.id
+            
+            this.tiles.appendChild(tileElement)
+            tileElement.style.transform = `scale(0.3)`
+            
+            setTimeout(()=> {
+              tileElement.style.transform = `scale(1)`
+            }, 50)
+          }
+        })
+      })
     })
-    setTimeout(()=>{
-      this.createTile()
-      this.await = false
-    }, 100)
   }
 
   handlerTouchMove = (e) => {
