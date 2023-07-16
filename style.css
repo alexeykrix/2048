@@ -4,7 +4,7 @@
   margin: 0;
 }
 body {
-  background: #faf8ef;
+  background: #000;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -76,19 +76,19 @@ body {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr;
   
-  background: #bbada0;
+  background: #1a1a1a;
   width:  400px;
   height: 400px;
   border-radius: 10px;
   padding: 10px;
 }
 .cell {
-  background: #eee4da59;
+  background: #00000059;
   border-radius: 10px;
 }
 
 .restart {
-  background: #8f7a66;
+  background: #1a1a1a;
   padding: 0 8px;
   height: 32px;
   line-height: 35px;
@@ -98,7 +98,7 @@ body {
   border: none;
   border-radius: 5px;
   margin-top: 20px;
-  font-family: Nunito, Roboto sans-serif;
+  font-family: Nunito, Roboto, sans-serif;
   font-weight: 700;
 }
 
@@ -113,16 +113,16 @@ body {
   }
 }
 
-.s0 .tile-inner {background: #eee4da; color: #776e65; font-size: 35px;}
-.s1 .tile-inner {background: #eee1c9; color: #776e65; font-size: 35px;}
-.s2 .tile-inner {background: #f3b27a; font-size: 35px;}
-.s3 .tile-inner {background: #f69664; font-size: 35px;}
-.s4 .tile-inner {background: #f77c5f; font-size: 35px;}
-.s5 .tile-inner {background: #f75f3b; font-size: 35px;}
-.s6 .tile-inner {background: #edd073; font-size: 25px;}
-.s7 .tile-inner {background: #edcc62; font-size: 25px;}
-.s8 .tile-inner {background: #edc950; font-size: 25px;}
-.s9 .tile-inner {background: #edc53f; font-size: 15px;}
+.s0 .tile-inner {background: #c5bdb5; color: #776e65; font-size: 35px;}
+.s1 .tile-inner {background: #b7ae9c; color: #776e65; font-size: 35px;}
+.s2 .tile-inner {background: #b48459; font-size: 35px;}
+.s3 .tile-inner {background: #c77950; font-size: 35px;}
+.s4 .tile-inner {background: #bb5d48; font-size: 35px;}
+.s5 .tile-inner {background: #bf482d; font-size: 35px;}
+.s6 .tile-inner {background: #bca55b; font-size: 25px;}
+.s7 .tile-inner {background: #c6ab52; font-size: 25px;}
+.s8 .tile-inner {background: #bea141; font-size: 25px;}
+.s9 .tile-inner {background: #b89931; font-size: 15px;}
 .s10 .tile-inner {
   font-size: 15px;
   background: #edc22e;
